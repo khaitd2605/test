@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Redirect</title>
+  </head>
+  <body>
+    <script>
+      // Đặt các URL ở đây
+      const longUrl = "zps.game.pusoy.th://play"; // URL ban đầu để chuyển hướng
+      const appStoreUrl =
+        "https://apps.apple.com/vn/app/zingplay-ti%E1%BA%BFn-l%C3%AAn-ica/id1528287521?ppid=3b82ee87-b9df-4ebc-a810-0f24f3f008d9";
+      const playStoreUrl =
+        "https://play.google.com/store/apps/details?id=game.bida.vng&hl=en_US";
+
+      // Chuyển hướng ban đầu
+      const params = new URLSearchParams(window.location.search);
+      const paramsString = params.toString(); // Convert to query string
+      window.location = longUrl + "?" + paramsString;
+
+      // Kiểm tra nếu URL chứa 'livestream' hoặc 'bco'
+      let isOpenOther = false;
+      const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+      if (iOS) {
+        setTimeout(function () {
+          if (!isOpenOther) {
+            window.location = appStoreUrl;
+          }
+        }, 5000);
+      } else {
+        const ua = navigator.userAgent.toLowerCase();
+        const isAndroid = ua.includes("android");
+
+        if (isAndroid) {
+          setTimeout(function () {
+            if (!isOpenOther) {
+              window.location = playStoreUrl;
+            }
+          }, 5000);
+        } else {
+          // Nếu không phải iOS hay Android, chuyển đến Google Play như dự phòng
+          window.location = playStoreUrl;
+        }
+      }
+
+      // Kiểm tra nếu người dùng đã chuyển sang ứng dụng khác (ứng dụng đã mở)
+      function handleVisibilityChange() {
+        if (document.hidden) {
+          isOpenOther = true;
+        }
+      }
+
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+    </script>
+  </body>
+</html>
